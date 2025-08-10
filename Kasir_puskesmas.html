@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Kasir Puskesmas Tugu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f0f4f1;
+            color: #2e7d32;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Styling Login Section */
+        #login-section {
+            display: block;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-top: 50px;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #login-section h2 {
+            color: #2e7d32;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        #login-section p {
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        #login-section label {
+            display: block;
+            text-align: left;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #2e7d32;
+        }
+
+        #login-section input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #81c784;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        #login-section button {
+            background-color: #2e7d32;
+            color: #ffffff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+
+        #login-section button:hover {
+            background-color: #1b5e20;
+        }
+
+        #login-error {
+            color: #d32f2f;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        /* Styling App Section */
+        #app-section {
+            display: none;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        #app-section h1 {
+            color: #2e7d32;
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #app-section p {
+            color: #555;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        #app-section .section {
+            background-color: #e8f5e9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        #app-section .section h2 {
+            color: #2e7d32;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        #app-section label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #2e7d32;
+        }
+
+        #app-section input, #app-section select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #81c784;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        #app-section button {
+            background-color: #2e7d32;
+            color: #ffffff;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+            margin-right: 10px;
+        }
+
+        #app-section button:hover {
+            background-color: #1b5e20;
+        }
+
+        #app-section table {
+            width: 100%;
+            margin-top: 10px;
+            border-collapse: collapse;
+        }
+
+        #app-section th {
+            background-color: #81c784;
+            color: #ffffff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        #app-section td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+
+        #app-section .action-buttons button {
+            margin-right: 10px;
+            padding: 6px 12px;
+        }
+
+        #app-section .action-buttons button:last-child {
+            margin-right: 0;
+        }
+
+        #app-section .search-container {
+            margin-bottom: 15px;
+        }
+
+        /* Styling untuk Rincian Layanan */
+        .detail-list {
+            list-style-type: none;
+            padding: 0;
+            text-align: left;
+        }
+
+        .detail-list li {
+            padding: 2px 0;
+        }
+
+        /* Responsif */
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            #login-section, #app-section {
+                padding: 20px;
+            }
+            #app-section h1 {
+                font-size: 22px;
+            }
+            #app-section .section {
+                padding: 15px;
+            }
+            #app-section button {
+                margin-right: 5px;
+                padding: 6px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Bagian Login untuk 3 User -->
+        <div id="login-section" class="section">
+            <h2>Login Kasir</h2>
+            <p>Masukkan username dan password. Hanya 3 user yang diizinkan: user1/pass1, user2/pass2, user3/pass3.</p>
+            <label for="username">Username:</label>
+            <input type="text" id="username"><br>
+            <label for="password">Password:</label>
+            <input type="password" id="password"><br>
+            <button onclick="login()">Login</button>
+            <p id="login-error" class="error"></p>
+        </div>
+
+        <!-- Bagian Aplikasi Utama -->
+        <div id="app-section">
+            <h1>Aplikasi Kasir Puskesmas Tugu</h1>
+            <p>Selamat datang, <span id="current-user"></span>! <button onclick="logout()">Logout</button></p>
+
+            <div class="section">
+                <h2>Buat Transaksi Baru</h2>
+                <input type="hidden" id="edit-id" value="">
+                <label for="nama-pasien">Nama Pasien:</label>
+                <input type="text" id="nama-pasien"><br>
+
+                <label for="kategori-layanan">Kategori Layanan:</label>
+                <select id="kategori-layanan">
+                    <option value="">-- Pilih Kategori --</option>
+                    <option value="pendaftaran">Pendaftaran & Administrasi</option>
+                    <option value="gigi">Gigi & Mulut</option>
+                    <option value="umum">Tindakan Umum</option>
+                    <option value="penunjang">Pemeriksaan Penunjang</option>
+                    <option value="kia">KIA, KB & Persalinan</option>
+                    <option value="laboratorium">Laboratorium</option>
+                    <option value="lain">Layanan Lain & Konseling</option>
+                    <option value="ambulans">Ambulans & Layanan Luar</option>
+                </select><br>
+
+                <div class="search-container">
+                    <label for="search-layanan">Cari Layanan:</label>
+                    <input type="text" id="search-layanan" onkeyup="searchLayanan()" placeholder="Ketik untuk mencari...">
+                </div>
+
+                <label for="layanan">Pilih Layanan:</label>
+                <select id="layanan">
+                    <option value="">-- Pilih layanan --</option>
+                </select><br>
+
+                <label for="jumlah">Jumlah:</label>
+                <input type="number" id="jumlah" min="1" value="1"><br>
+
+                <button onclick="tambahLayanan()">Tambah Layanan</button>
+            </div>
+
+            <div class="section">
+                <h2>Detail Transaksi</h2>
+                <table id="detail-transaksi">
+                    <thead>
+                        <tr>
+                            <th>Layanan</th>
+                            <th>Jml</th>
+                            <th>Harga</th>
+                            <th>Subtotal</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <p>Total: Rp <span id="total">0</span></p>
+
+                <button onclick="simpanTransaksi()">Simpan Transaksi</button>
+                <button onclick="cetakStruk()">Cetak Struk</button>
+                <button onclick="batalkanTransaksi()">Batalkan</button>
+            </div>
+
+            <div class="section">
+                <h2>Riwayat Transaksi</h2>
+                <button onclick="downloadLaporan()">Download Laporan (Excel)</button>
+                <table id="riwayat-transaksi">
+                    <thead>
+                        <tr>
+                            <th>ID Transaksi</th>
+                            <th>Tanggal</th>
+                            <th>Nama Pasien</th>
+                            <th>Total</th>
+                            <th>Rincian Layanan</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data Layanan
+        const layananData = {
+            pendaftaran: [
+                { nama: "Pelayanan Pagi (NIK Depok)", harga: 10000 },
+                { nama: "Pelayanan Pagi (Non-Depok)", harga: 20000 },
+                { nama: "Pelayanan Sore (NIK Depok)", harga: 15000 },
+                { nama: "Pelayanan Sore (Non-Depok)", harga: 30000 },
+                { nama: "Pelayanan Gawat Darurat (NIK Depok)", harga: 15000 },
+                { nama: "Pelayanan Gawat Darurat (Non-Depok)", harga: 30000 },
+                { nama: "Surat Kesehatan Sehat", harga: 15000 },
+                { nama: "Surat Keterangan Tidak Terdeteksi Narkoba", harga: 50000 },
+                { nama: "Keterangan Kematian", harga: 20000 },
+                { nama: "Keterangan rekomendasi", harga: 50000 }
+            ],
+            gigi: [
+                { nama: "Pencabutan gigi sulung tanpa suntikan", harga: 35000 },
+                { nama: "Pencabutan gigi sulung dengan suntikan", harga: 50000 },
+                { nama: "Pencabutan gigi sulung dengan citoject", harga: 70000 },
+                { nama: "Pencabutan gigi tetap tanpa suntikan", harga: 35000 },
+                { nama: "Pencabutan gigi tetap dengan suntikan", harga: 70000 },
+                { nama: "Pencabutan gigi tetap dengan citoject", harga: 100000 },
+                { nama: "Pencabutan satu gigi dengan penyulit", harga: 125000 },
+                { nama: "Penambalan tetap glass ionomer (kecil)", harga: 50000 },
+                { nama: "Penambalan tetap glass ionomer (sedang)", harga: 75000 },
+                { nama: "Penambalan tetap glass ionomer (besar)", harga: 85000 },
+                { nama: "Penambalan tetap komposit (kecil)", harga: 100000 },
+                { nama: "Penambalan tetap komposit (sedang)", harga: 125000 },
+                { nama: "Penambalan tetap komposit (besar)", harga: 150000 },
+                { nama: "Penambalan sementara satu gigi", harga: 30000 },
+                { nama: "Perawatan gigi (pulpa/saluran akar)", harga: 50000 },
+                { nama: "Pembersihan karang gigi per regio", harga: 50000 },
+                { nama: "Kuretase per gigi", harga: 30000 },
+                { nama: "Open boor", harga: 30000 },
+                { nama: "Alveolektomi/gigi", harga: 150000 },
+                { nama: "Operkulektomi", harga: 100000 },
+                { nama: "Incisi abses (Gigi)", harga: 50000 },
+                { nama: "Penjahitan luka 1 s/d 5 jahitan (Gigi)", harga: 50000 },
+                { nama: "Penambahan setiap jahitan (Gigi)", harga: 5000 },
+                { nama: "Buka jahitan (Gigi)", harga: 20000 },
+                { nama: "Grinding", harga: 20000 },
+                { nama: "Polishing", harga: 20000 },
+                { nama: "Cetak Alginate", harga: 100000 },
+                { nama: "Gigi Tiruan Akrilik (1 gigi pertama)", harga: 500000 },
+                { nama: "Gigi Tiruan Akrilik (tambahan per gigi)", harga: 150000 },
+                { nama: "Gigi Tiruan Valplast (1 gigi pertama)", harga: 1000000 },
+                { nama: "Gigi Tiruan Valplast (tambahan per gigi)", harga: 250000 },
+                { nama: "Rebasing/Relining gigi tiruan akrilik", harga: 220000 },
+                { nama: "Reparasi plat akrilik (tambahan per gigi)", harga: 200000 },
+                { nama: "Jacket Crown Acrilyc", harga: 400000 },
+                { nama: "Jacket Crown Metal Porcelen", harga: 1000000 },
+                { nama: "Jacket Crown Procelen", harga: 1500000 },
+                { nama: "Aplikasi Fluor per rahang", harga: 75000 },
+                { nama: "Bongkar/up filling tambalan", harga: 40000 },
+                { nama: "Koreksi oklusi", harga: 35000 },
+                { nama: "Splinting (3-5 gigi)", harga: 150000 },
+                { nama: "Medikasi oral", harga: 10000 }
+            ],
+            umum: [
+                { nama: "Ekstraksi Serumen/Irigasi Telinga", harga: 30000 },
+                { nama: "Ganti balutan kecil (< 5 cm)", harga: 25000 },
+                { nama: "Ganti balutan sedang (5 - 10 cm)", harga: 50000 },
+                { nama: "Ganti balutan besar (> 10 cm)", harga: 75000 },
+                { nama: "Incisi abses (Umum)", harga: 60000 },
+                { nama: "Jasa suntik", harga: 20000 },
+                { nama: "Sirkumsisi (tanpa penyulit)", harga: 300000 },
+                { nama: "Lepas infus", harga: 20000 },
+                { nama: "Lepas kateter urin", harga: 30000 },
+                { nama: "Lepas NGT", harga: 25000 },
+                { nama: "Pasang infus", harga: 75000 },
+                { nama: "Pasang kateter urin", harga: 75000 },
+                { nama: "Pasang Spalk", harga: 55000 },
+                { nama: "Pasang tampon epistaksis", harga: 30000 },
+                { nama: "Pelayanan kesehatan calon haji", harga: 35000 },
+                { nama: "Pelayanan medikolegal (visum luar)", harga: 100000 },
+                { nama: "Pasang NGT", harga: 50000 },
+                { nama: "Pasang Oksigen (1 jam pertama)", harga: 35000 },
+                { nama: "Pasang Oksigen (per liter/jam setelah 1 jam)", harga: 10000 },
+                { nama: "Penggunaan nebulizer", harga: 50000 },
+                { nama: "Perawatan luka bakar <10%", harga: 50000 },
+                { nama: "Perawatan luka bakar 5-10%", harga: 80000 },
+                { nama: "Perawatan luka bakar >10%", harga: 100000 },
+                { nama: "Perawatan luka dg jahitan (1-5 jahitan)", harga: 50000 },
+                { nama: "Perawatan luka dg jahitan (>5, per jahitan)", harga: 10000 },
+                { nama: "Perawatan luka kecil tanpa jahitan", harga: 35000 },
+                { nama: "Perawatan luka sedang tanpa jahitan", harga: 50000 },
+                { nama: "Perawatan luka besar tanpa jahitan", harga: 75000 },
+                { nama: "Perawatan luka DM dengan gangren", harga: 200000 },
+                { nama: "Perawatan luka DM tanpa gangren", harga: 100000 },
+                { nama: "Bedah Minor (granuloma, lipoma, dll)", harga: 100000 },
+                { nama: "Tindik telinga", harga: 50000 },
+                { nama: "Resusitasi", harga: 100000 },
+                { nama: "Suction lendir dewasa", harga: 35000 },
+                { nama: "Bilas Lambung", harga: 100000 },
+                { nama: "Buka Jahitan (Umum)", harga: 20000 },
+                { nama: "Chalazion", harga: 100000 },
+                { nama: "Ekstraksi satu kuku", harga: 100000 },
+                { nama: "Ekstraksi batu uretra", harga: 50000 },
+                { nama: "Ekstraksi benda asing", harga: 50000 }
+            ],
+            penunjang: [
+                { nama: "Pemeriksaan Ichihara", harga: 10000 },
+                { nama: "Refraksi mata dg lensa koreksi", harga: 20000 },
+                { nama: "Rectal toucher & darah samar feses", harga: 45000 },
+                { nama: "Tes Mantoux (Non program)", harga: 100000 },
+                { nama: "CTG", harga: 55000 },
+                { nama: "Doppler", harga: 15000 },
+                { nama: "EKG", harga: 50000 },
+                { nama: "Spirometri", harga: 50000 },
+                { nama: "USG dengan hasil print out", harga: 75000 },
+                { nama: "USG tanpa hasil print out", harga: 45000 },
+                { nama: "Print out hasil USG", harga: 30000 }
+            ],
+            kia: [
+                { nama: "ANC/Periksa hamil (Bidan)", harga: 60000 },
+                { nama: "ANC/Periksa hamil (Dokter)", harga: 80000 },
+                { nama: "ANC/Periksa hamil (Dokter + USG)", harga: 140000 },
+                { nama: "PNC", harga: 25000 },
+                { nama: "Inspekulo", harga: 25000 },
+                { nama: "KB suntik 1 bulan/paket", harga: 32000 },
+                { nama: "Krioterapi", harga: 250000 },
+                { nama: "Tindakan pasca persalinan", harga: 180000 },
+                { nama: "Kontrol IUD dan Implant", harga: 30000 },
+                { nama: "Pasang Implant (tanpa alat)", harga: 200000 },
+                { nama: "Pasang IUD (tanpa alat)", harga: 200000 },
+                { nama: "Pencabutan implant", harga: 200000 },
+                { nama: "Pencabutan IUD", harga: 100000 },
+                { nama: "Pemeriksaan IVA", harga: 30000 },
+                { nama: "Papsmear", harga: 250000 },
+                { nama: "Perawatan bayi dalam inkubator/hari", harga: 100000 },
+                { nama: "Perawatan bayi normal/paket", harga: 100000 },
+                { nama: "Suction/Slym Zuiger", harga: 15000 },
+                { nama: "Terapi blue light/hari", harga: 75000 },
+                { nama: "Tindakan irigasi vagina", harga: 25000 },
+                { nama: "Persalinan pervaginam normal", harga: 1000000 },
+                { nama: "Paket new born photo shoot 10R", harga: 100000 },
+                { nama: "Pelayanan Tumbuh Kembang Anak Tk Dasar", harga: 50000 },
+                { nama: "Perawatan Bayi sehat di rumah/kunjungan", harga: 50000 },
+                { nama: "Pijat bayi", harga: 35000 },
+                { nama: "Pijat Laktasi", harga: 30000 },
+                { nama: "Senam hamil/orang", harga: 20000 }
+            ],
+            laboratorium: [
+                { nama: "Golongan darah + Rhesus", harga: 20000 },
+                { nama: "Hb", harga: 15000 },
+                { nama: "Hematologi Lengkap", harga: 40000 },
+                { nama: "Hematologi Rutin", harga: 25000 },
+                { nama: "Laju endap darah (LED)", harga: 15000 },
+                { nama: "Retikulosit", harga: 15000 },
+                { nama: "Malaria (SAD)", harga: 10000 },
+                { nama: "Mikrofilaria (SAD)", harga: 10000 },
+                { nama: "Masa pembekuan", harga: 15000 },
+                { nama: "Masa pendarahan", harga: 15000 },
+                { nama: "Rumpel Leed", harga: 15000 },
+                { nama: "Gula darah per test", harga: 20000 },
+                { nama: "Pemeriksaan HbA1c", harga: 200000 },
+                { nama: "Albumin", harga: 25000 },
+                { nama: "Pemeriksaan microalbuminuria", harga: 120000 },
+                { nama: "Asam Urat", harga: 23000 },
+                { nama: "Bilirubin direct", harga: 27000 },
+                { nama: "Bilirubin indirect", harga: 27000 },
+                { nama: "Bilirubin total", harga: 27000 },
+                { nama: "Cholesterol total", harga: 45000 },
+                { nama: "Globulin", harga: 20000 },
+                { nama: "HDL", harga: 45000 },
+                { nama: "Kreatinin", harga: 30000 },
+                { nama: "LDL", harga: 60000 },
+                { nama: "Protein total", harga: 27000 },
+                { nama: "SGOT", harga: 25000 },
+                { nama: "SGPT", harga: 25000 },
+                { nama: "Trigliserida", harga: 50000 },
+                { nama: "Ureum", harga: 30000 },
+                { nama: "WIDAL", harga: 50000 },
+                { nama: "HBsAg Rapid", harga: 42000 },
+                { nama: "TP Rapid", harga: 50000 },
+                { nama: "RPR/VDRL", harga: 50000 },
+                { nama: "Rapid test HIV", harga: 75000 },
+                { nama: "NS1", harga: 180000 },
+                { nama: "Dengue IgG, IGM", harga: 120000 },
+                { nama: "Antigen SARS CoV-2", harga: 60000 },
+                { nama: "RT PCR (Covid-19)", harga: 275000 },
+                { nama: "Protein, Reduksi, pH Urin", harga: 20000 },
+                { nama: "Tes kehamilan", harga: 10000 },
+                { nama: "Urine lengkap", harga: 35000 },
+                { nama: "Narkoba 3 Parameter (THC, Morp, Amp)", harga: 120000 },
+                { nama: "Narkoba 6 Parameter (THC, Morp, Amp, Meth, Cooc, Bzo)", harga: 180000 },
+                { nama: "Batang tahan asam / Sputum BTA", harga: 30000 },
+                { nama: "Neisseria", harga: 30000 },
+                { nama: "Secret GO/Pewarnaan Gram", harga: 30000 },
+                { nama: "Mikroskopis Jamur", harga: 30000 },
+                { nama: "TCM Non Program (TCM TB)", harga: 385000 },
+                { nama: "Malaria ICT", harga: 50000 },
+                { nama: "Mikrofilaria ICT", harga: 50000 },
+                { nama: "Secret Trichomonas", harga: 30000 }
+            ],
+            lain: [
+                { nama: "Fisioterapi", harga: 100000 },
+                { nama: "Hipnoterapi", harga: 50000 },
+                { nama: "Homecare", harga: 70000 },
+                { nama: "Klinik Laktasi", harga: 10000 },
+                { nama: "Konseling Upaya Berhenti Merokok (UBM)", harga: 10000 },
+                { nama: "Pemeriksaan CO Analyzer (UBM)", harga: 20000 },
+                { nama: "Konseling Farmasi", harga: 10000 },
+                { nama: "Konseling Gizi", harga: 10000 },
+                { nama: "Konseling NAPZA", harga: 10000 },
+                { nama: "Konseling PKPR", harga: 10000 },
+                { nama: "Konseling Psikologi", harga: 30000 },
+                { nama: "Konseling Reproduksi", harga: 10000 },
+                { nama: "One Day Care/ODC (6-24 jam)", harga: 200000 },
+                { nama: "Pelayanan Pendukung Methadon", harga: 10000 }
+            ],
+            ambulans: [
+                { nama: "Jasa pengambilan sampel (home service)", harga: 150000 },
+                { nama: "Jasa pengambilan spesimen rujukan", harga: 50000 },
+                { nama: "Pelayanan tindakan pra rujukan", harga: 180000 },
+                { nama: "Layanan Pengantaran Obat (dalam wilayah kerja)", harga: 15000 },
+                { nama: "Ambulans Rujukan (Depok)", harga: 200000 },
+                { nama: "Ambulans Rujukan (1-10 km)", harga: 300000 },
+                { nama: "Ambulans Rujukan (11-20 km)", harga: 400000 },
+                { nama: "Ambulans Rujukan (> 20 km)", harga: 500000 },
+                { nama: "Ambulans Rujukan (Jabotabek < 20 km)", harga: 500000 },
+                { nama: "Ambulans Rujukan (Jabotabek 20-30 km)", harga: 750000 },
+                { nama: "Ambulans Rujukan (Jabotabek > 30-50 km)", harga: 1000000 },
+                { nama: "Ambulans Atas Permintaan (< 6 jam)", harga: 240000 },
+                { nama: "Ambulans Atas Permintaan (6-12 jam)", harga: 320000 },
+                { nama: "Ambulans Atas Permintaan (> 12 jam)", harga: 600000 },
+                { nama: "Fogging tanpa indikasi (per fokus)", harga: 400000 },
+                { nama: "Desinfektan tanpa indikasi (per rumah)", harga: 300000 }
+            ]
+        };
+
+        // User hardcoded untuk keamanan sederhana (jangan gunakan di produksi real, gunakan backend)
+        const users = {
+            user1: 'pass1',
+            user2: 'pass2',
+            user3: 'pass3'
+        };
+
+        let currentUser = null;
+        let transaksiSementara = []; // Detail transaksi sementara
+        let riwayatTransaksi = JSON.parse(localStorage.getItem('riwayatTransaksi')) || []; // Riwayat disimpan di localStorage
+
+        // Fungsi Login
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const error = document.getElementById('login-error');
+
+            if (users[username] && users[username] === password) {
+                currentUser = username;
+                document.getElementById('current-user').textContent = username;
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('app-section').style.display = 'block';
+                loadRiwayat();
+            } else {
+                error.textContent = 'Username atau password salah!';
+            }
+        }
+
+        // Fungsi Logout
+        function logout() {
+            currentUser = null;
+            document.getElementById('login-section').style.display = 'block';
+            document.getElementById('app-section').style.display = 'none';
+            document.getElementById('login-error').textContent = '';
+        }
+
+        // Update opsi layanan berdasarkan kategori
+        document.getElementById('kategori-layanan').addEventListener('change', function() {
+            const kategori = this.value;
+            const layananSelect = document.getElementById('layanan');
+            layananSelect.innerHTML = '<option value="">-- Pilih layanan --</option>';
+
+            if (layananData[kategori]) {
+                layananData[kategori].forEach(layanan => {
+                    const option = document.createElement('option');
+                    option.value = layanan.nama;
+                    option.textContent = `${layanan.nama} (Rp ${layanan.harga})`;
+                    option.dataset.harga = layanan.harga;
+                    layananSelect.appendChild(option);
+                });
+            }
+        });
+
+        // Tambah Layanan ke Detail Transaksi
+        function tambahLayanan() {
+            const layanan = document.getElementById('layanan').value;
+            const jumlah = parseInt(document.getElementById('jumlah').value);
+            const harga = parseInt(document.getElementById('layanan').selectedOptions[0].dataset.harga);
+
+            if (layanan && jumlah > 0 && harga) {
+                const subtotal = jumlah * harga;
+                transaksiSementara.push({ layanan, jumlah, harga, subtotal });
+
+                updateDetailTransaksi();
+            }
+        }
+
+        // Update Tabel Detail Transaksi
+        function updateDetailTransaksi() {
+            const tbody = document.getElementById('detail-transaksi').querySelector('tbody');
+            tbody.innerHTML = '';
+            let total = 0;
+
+            transaksiSementara.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${item.layanan}</td>
+                    <td>${item.jumlah}</td>
+                    <td>Rp ${item.harga}</td>
+                    <td>Rp ${item.subtotal}</td>
+                    <td><button onclick="hapusItem(${index})">Hapus</button></td>
+                `;
+                tbody.appendChild(tr);
+                total += item.subtotal;
+            });
+
+            document.getElementById('total').textContent = total;
+        }
+
+        // Hapus Item dari Transaksi Sementara
+        function hapusItem(index) {
+            transaksiSementara.splice(index, 1);
+            updateDetailTransaksi();
+        }
+
+        // Simpan Transaksi ke Riwayat
+        function simpanTransaksi() {
+            const namaPasien = document.getElementById('nama-pasien').value;
+            const total = parseInt(document.getElementById('total').textContent);
+            const editId = document.getElementById('edit-id').value;
+
+            if (namaPasien && transaksiSementara.length > 0 && total > 0) {
+                const tanggal = new Date().toLocaleString();
+                if (editId) {
+                    // Update existing transaksi
+                    const index = riwayatTransaksi.findIndex(t => t.id == editId);
+                    if (index !== -1) {
+                        riwayatTransaksi[index] = { id: parseInt(editId), tanggal, namaPasien, total, detail: transaksiSementara, user: currentUser };
+                    }
+                } else {
+                    // New transaksi
+                    const id = riwayatTransaksi.length ? Math.max(...riwayatTransaksi.map(t => t.id)) + 1 : 1;
+                    riwayatTransaksi.push({ id, tanggal, namaPasien, total, detail: transaksiSementara, user: currentUser });
+                }
+
+                localStorage.setItem('riwayatTransaksi', JSON.stringify(riwayatTransaksi));
+                batalkanTransaksi();
+                loadRiwayat();
+                alert('Transaksi disimpan!');
+            } else {
+                alert('Lengkapi data transaksi!');
+            }
+        }
+
+        // Load Riwayat Transaksi
+        function loadRiwayat() {
+            const tbody = document.getElementById('riwayat-transaksi').querySelector('tbody');
+            tbody.innerHTML = '';
+
+            riwayatTransaksi.forEach(item => {
+                const rincianList = item.detail.map(d => `<li>${d.layanan} x ${d.jumlah}</li>`).join('');
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${item.id}</td>
+                    <td>${item.tanggal}</td>
+                    <td>${item.namaPasien}</td>
+                    <td>Rp ${item.total}</td>
+                    <td><ul class="detail-list">${rincianList}</ul></td>
+                    <td class="action-buttons">
+                        <button onclick="lihatDetail(${item.id})">Lihat</button>
+                        <button onclick="editTransaksi(${item.id})">Edit</button>
+                        <button onclick="hapusTransaksi(${item.id})">Hapus</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Lihat Detail Transaksi Riwayat
+        function lihatDetail(id) {
+            const transaksi = riwayatTransaksi.find(t => t.id === id);
+            if (transaksi) {
+                let detailStr = `ID: ${transaksi.id}\nTanggal: ${transaksi.tanggal}\nPasien: ${transaksi.namaPasien}\nUser: ${transaksi.user}\n\nDetail:\n`;
+                transaksi.detail.forEach(d => {
+                    detailStr += `${d.layanan} x ${d.jumlah} = Rp ${d.subtotal}\n`;
+                });
+                detailStr += `\nTotal: Rp ${transaksi.total}`;
+                alert(detailStr);
+            }
+        }
+
+        // Edit Transaksi
+        function editTransaksi(id) {
+            const transaksi = riwayatTransaksi.find(t => t.id === id);
+            if (transaksi) {
+                document.getElementById('edit-id').value = transaksi.id;
+                document.getElementById('nama-pasien').value = transaksi.namaPasien;
+                transaksiSementara = transaksi.detail.slice(); // Copy detail
+                updateDetailTransaksi();
+            }
+        }
+
+        // Hapus Transaksi dari Riwayat
+        function hapusTransaksi(id) {
+            riwayatTransaksi = riwayatTransaksi.filter(t => t.id !== id);
+            localStorage.setItem('riwayatTransaksi', JSON.stringify(riwayatTransaksi));
+            loadRiwayat();
+        }
+
+        // Batalkan Transaksi Sementara
+        function batalkanTransaksi() {
+            transaksiSementara = [];
+            updateDetailTransaksi();
+            document.getElementById('nama-pasien').value = '';
+            document.getElementById('kategori-layanan').value = '';
+            document.getElementById('layanan').value = '';
+            document.getElementById('jumlah').value = 1;
+            document.getElementById('edit-id').value = '';
+        }
+
+        // Cetak Struk (membuka window baru untuk print)
+        function cetakStruk() {
+            const namaPasien = document.getElementById('nama-pasien').value;
+            const total = document.getElementById('total').textContent;
+            if (transaksiSementara.length === 0) return alert('Tidak ada transaksi!');
+
+            let struk = `<h2>Struk Puskesmas Tugu</h2><p>Pasien: ${namaPasien}</p><p>Tanggal: ${new Date().toLocaleString()}</p><table border="1"><tr><th>Layanan</th><th>Jml</th><th>Subtotal</th></tr>`;
+            transaksiSementara.forEach(item => {
+                struk += `<tr><td>${item.layanan}</td><td>${item.jumlah}</td><td>Rp ${item.subtotal}</td></tr>`;
+            });
+            struk += `</table><p>Total: Rp ${total}</p>`;
+
+            const win = window.open('', '', 'width=600,height=400');
+            win.document.write(struk);
+            win.document.close();
+            win.print();
+        }
+
+        // Download Laporan sebagai CSV (simulasi Excel) dengan kolom yang sesuai
+        function downloadLaporan() {
+            let csv = 'ID Transaksi,Tanggal,Nama Pasien,Total,Rincian Layanan,User\n';
+            riwayatTransaksi.forEach(item => {
+                const rincian = item.detail.map(d => `${d.layanan} x ${d.jumlah} (Rp ${d.subtotal})`).join('; ');
+                csv += `"${item.id}","${item.tanggal}","${item.namaPasien}","${item.total}","${rincian}","${item.user}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'laporan_transaksi.csv';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Fungsi pencarian layanan
+        function searchLayanan() {
+            const kategori = document.getElementById('kategori-layanan').value;
+            const searchTerm = document.getElementById('search-layanan').value.toLowerCase();
+            const layananSelect = document.getElementById('layanan');
+            layananSelect.innerHTML = '<option value="">-- Pilih layanan --</option>';
+
+            if (layananData[kategori]) {
+                layananData[kategori].filter(l => l.nama.toLowerCase().includes(searchTerm)).forEach(layanan => {
+                    const option = document.createElement('option');
+                    option.value = layanan.nama;
+                    option.textContent = `${layanan.nama} (Rp ${layanan.harga})`;
+                    option.dataset.harga = layanan.harga;
+                    layananSelect.appendChild(option);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
